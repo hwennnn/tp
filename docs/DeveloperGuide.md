@@ -380,36 +380,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   Use case ends.
 
-**Use case: Delete a person**
-
-**MSS**
-
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
-
-    Use case ends.
-
-**Extensions**
-
-* 2a. The list is empty.
-
-  Use case ends.
-
-* 3a. The given index is invalid.
-
-    * 3a1. AddressBook shows an error message.
-
-      Use case resumes at step 2.
-
-**Use Case: Add Quick Note**
-
-Use case: UC5 – Add Quick Note
-Actor: Social Worker
+**Use case (UC05): Add Quick Note**
 
 **Preconditions**
-* Social Worker is logged into the CaseTrack.
+* User is logged into the system.
 * Patient record exists in the system (by ID or by Name + Phone).
 
 **Guarantees**
@@ -418,44 +392,45 @@ Actor: Social Worker
 * Invalid inputs will not create notes.
 
 **MSS**
-1.	Social Worker types the command to add a quick note with patient reference and text.
-2.	CaseTrack validates the patient reference (ID or Name + Phone).
-3.	CaseTrack validates the note text is not empty.
-4.	CaseTrack stores the note under the patient’s record.
-5.	CaseTrack confirms success by displaying the created note.
+
+1.	User types the command to add a quick note with patient reference and text.
+2.	System validates the patient reference (ID or Name + Phone).
+3.	System validates the note text is not empty.
+4.	System stores the note under the patient’s record.
+5.	System confirms success by displaying the created note.
 
     Use case ends.
 
 **Extensions**
 *	2a. Missing patient reference.
 
-    * 2a1. CaseTrack shows error: “Either ID or (Name and Phone) is required.”
+    * 2a1. System shows error: “Either ID or (Name and Phone) is required.”
   
     * 2a2. Use case ends.
   
 *	2b. No matching patient found.
 
-    * 2b1. CaseTrack shows error: “No patient found with the given details.”
+    * 2b1. System shows error: “No patient found with the given details.”
   
     * 2b2. Use case ends.
 
 *	2c. Phone number invalid (not 8 digits).
 
-    * 2c1. CaseTrack shows an error: “Phone number must be 8 digits.”
+    * 2c1. System shows an error: “Phone number must be 8 digits.”
 
     * 2c2. Use case ends.
 
 *	3a. Note text is empty.
 
-    * 3a1. CaseTrack shows an error: “Note cannot be empty.”
+    * 3a1. System shows an error: “Note cannot be empty.”
 
     * 3a2. Use case ends.
 
-*	*a. At any time, Social Worker cancels the action.
+*	*a. At any time, User cancels the action.
 
-    * *a1. CaseTrack confirms cancellation.
+    * *a1. System confirms cancellation.
 
-    * *a2. Social Worker confirms.
+    * *a2. User confirms.
 
     * Use case ends.
 
