@@ -22,8 +22,10 @@ import casetrack.app.logic.commands.ExitCommand;
 import casetrack.app.logic.commands.FindCommand;
 import casetrack.app.logic.commands.HelpCommand;
 import casetrack.app.logic.commands.ListCommand;
+import casetrack.app.logic.commands.NoteCommand;
 import casetrack.app.logic.parser.exceptions.ParseException;
 import casetrack.app.model.person.NameContainsKeywordsPredicate;
+import casetrack.app.model.person.Note;
 import casetrack.app.model.person.Person;
 import casetrack.app.testutil.EditPersonDescriptorBuilder;
 import casetrack.app.testutil.PersonBuilder;
@@ -86,6 +88,14 @@ public class AddressBookParserTest {
     public void parseCommand_list() throws Exception {
         assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD) instanceof ListCommand);
         assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD + " 3") instanceof ListCommand);
+    }
+
+    @Test
+    public void parseCommand_note() throws Exception {
+        Note note = new Note("Follow-up in 2 weeks");
+        NoteCommand command = (NoteCommand) parser.parseCommand(NoteCommand.COMMAND_WORD + " "
+                + INDEX_FIRST_PERSON.getOneBased() + " t/Follow-up in 2 weeks");
+        assertEquals(new NoteCommand(INDEX_FIRST_PERSON, note), command);
     }
 
     @Test
