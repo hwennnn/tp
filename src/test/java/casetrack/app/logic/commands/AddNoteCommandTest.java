@@ -83,7 +83,7 @@ public class AddNoteCommandTest {
     public void execute_validNameAndPhoneUnfilteredList_success() {
         Person personToAddNoteTo = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Note noteToAdd = new Note("Follow-up in 2 weeks");
-        NoteCommand noteCommand = new NoteCommand(personToAddNoteTo.getName(), 
+        NoteCommand noteCommand = new NoteCommand(personToAddNoteTo.getName(),
                 personToAddNoteTo.getPhone(), noteToAdd);
 
         Person expectedPerson = personToAddNoteTo.addNote(noteToAdd);

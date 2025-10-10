@@ -31,7 +31,7 @@ public class AddNoteCommandParserTest {
 
     @Test
     public void parse_validArgsWithNameAndPhone_returnsNoteCommand() {
-        String userInput = " " + PREFIX_NAME + "John Doe " + PREFIX_PHONE + "91234567 " 
+        String userInput = " " + PREFIX_NAME + "John Doe " + PREFIX_PHONE + "91234567 "
                 + PREFIX_NOTE_TEXT + "Follow-up in 2 weeks";
         Name expectedName = new Name("John Doe");
         Phone expectedPhone = new Phone("91234567");
@@ -43,7 +43,7 @@ public class AddNoteCommandParserTest {
     @Test
     public void parse_missingNoteText_throwsParseException() {
         String userInput = "1";
-        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT, 
+        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 NoteCommand.MESSAGE_USAGE));
     }
 
@@ -62,76 +62,76 @@ public class AddNoteCommandParserTest {
     @Test
     public void parse_invalidIndex_throwsParseException() {
         String userInput = "a " + PREFIX_NOTE_TEXT + "Valid note";
-        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT, 
+        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 NoteCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_negativeIndex_throwsParseException() {
         String userInput = "-1 " + PREFIX_NOTE_TEXT + "Valid note";
-        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT, 
+        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 NoteCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_zeroIndex_throwsParseException() {
         String userInput = "0 " + PREFIX_NOTE_TEXT + "Valid note";
-        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT, 
+        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 NoteCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_missingName_throwsParseException() {
         String userInput = " " + PREFIX_PHONE + "91234567 " + PREFIX_NOTE_TEXT + "Valid note";
-        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT, 
+        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 NoteCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_missingPhone_throwsParseException() {
         String userInput = " " + PREFIX_NAME + "John Doe " + PREFIX_NOTE_TEXT + "Valid note";
-        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT, 
+        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 NoteCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_invalidName_throwsParseException() {
-        String userInput = " " + PREFIX_NAME + "John@Doe " + PREFIX_PHONE + "91234567 " 
+        String userInput = " " + PREFIX_NAME + "John@Doe " + PREFIX_PHONE + "91234567 "
                 + PREFIX_NOTE_TEXT + "Valid note";
         assertParseFailure(parser, userInput, Name.MESSAGE_CONSTRAINTS);
     }
 
     @Test
     public void parse_invalidPhone_throwsParseException() {
-        String userInput = " " + PREFIX_NAME + "John Doe " + PREFIX_PHONE + "invalid " 
+        String userInput = " " + PREFIX_NAME + "John Doe " + PREFIX_PHONE + "invalid "
                 + PREFIX_NOTE_TEXT + "Valid note";
         assertParseFailure(parser, userInput, Phone.MESSAGE_CONSTRAINTS);
     }
 
     @Test
     public void parse_bothIndexAndNamePhone_throwsParseException() {
-        String userInput = "1 " + PREFIX_NAME + "John Doe " + PREFIX_PHONE + "91234567 " 
+        String userInput = "1 " + PREFIX_NAME + "John Doe " + PREFIX_PHONE + "91234567 "
                 + PREFIX_NOTE_TEXT + "Valid note";
-        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT, 
+        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 NoteCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_neitherIndexNorNamePhone_throwsParseException() {
         String userInput = " " + PREFIX_NOTE_TEXT + "Valid note";
-        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT, 
+        assertParseFailure(parser, userInput, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 NoteCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_emptyArgs_throwsParseException() {
-        assertParseFailure(parser, "", String.format(MESSAGE_INVALID_COMMAND_FORMAT, 
+        assertParseFailure(parser, "", String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 NoteCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_duplicatePrefixes_throwsParseException() {
-        String userInput = " " + PREFIX_NAME + "John Doe " + PREFIX_NAME + "Jane Doe " 
+        String userInput = " " + PREFIX_NAME + "John Doe " + PREFIX_NAME + "Jane Doe "
                 + PREFIX_PHONE + "91234567 " + PREFIX_NOTE_TEXT + "Valid note";
         assertParseFailure(parser, userInput, "Multiple values specified for the following single-valued field(s): n/");
     }

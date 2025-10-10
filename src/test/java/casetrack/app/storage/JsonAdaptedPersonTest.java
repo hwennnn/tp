@@ -125,23 +125,24 @@ public class JsonAdaptedPersonTest {
         List<String> validNotes = new ArrayList<>();
         validNotes.add("Follow-up in 2 weeks");
         validNotes.add("Patient mentioned financial difficulties");
-        
+
         JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL,
                 VALID_ADDRESS, VALID_TAGS, validNotes);
-        
+
         Person modelPerson = person.toModelType();
         assertEquals(2, modelPerson.getNotes().size());
         assertTrue(modelPerson.getNotes().stream().anyMatch(note -> note.value.equals("Follow-up in 2 weeks")));
-        assertTrue(modelPerson.getNotes().stream().anyMatch(note -> note.value.equals("Patient mentioned financial difficulties")));
+        assertTrue(modelPerson.getNotes().stream().anyMatch(note ->
+                note.value.equals("Patient mentioned financial difficulties")));
     }
 
     @Test
     public void toModelType_emptyNotes_returnsPerson() throws Exception {
         List<String> emptyNotes = new ArrayList<>();
-        
+
         JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL,
                 VALID_ADDRESS, VALID_TAGS, emptyNotes);
-        
+
         Person modelPerson = person.toModelType();
         assertTrue(modelPerson.getNotes().isEmpty());
     }
@@ -150,7 +151,7 @@ public class JsonAdaptedPersonTest {
     public void toModelType_nullNotes_returnsPerson() throws Exception {
         JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL,
                 VALID_ADDRESS, VALID_TAGS, null);
-        
+
         Person modelPerson = person.toModelType();
         assertTrue(modelPerson.getNotes().isEmpty());
     }
@@ -162,11 +163,12 @@ public class JsonAdaptedPersonTest {
         notesWithInvalid.add("   "); // Invalid note (whitespace only)
         notesWithInvalid.add("Another valid note");
         notesWithInvalid.add(""); // Invalid note (empty)
-        
+
         JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL,
                 VALID_ADDRESS, VALID_TAGS, notesWithInvalid);
-        
+
         Person modelPerson = person.toModelType();
+
         // Should only have the 2 valid notes
         assertEquals(2, modelPerson.getNotes().size());
         assertTrue(modelPerson.getNotes().stream().anyMatch(note -> note.value.equals("Valid note")));
@@ -179,9 +181,9 @@ public class JsonAdaptedPersonTest {
         Person personWithNotes = new PersonBuilder(BENSON).build();
         personWithNotes = personWithNotes.addNote(new casetrack.app.model.person.Note("Test note 1"));
         personWithNotes = personWithNotes.addNote(new casetrack.app.model.person.Note("Test note 2"));
-        
+
         JsonAdaptedPerson jsonPerson = new JsonAdaptedPerson(personWithNotes);
-        
+
         // Verify notes are properly stored
         assertEquals(2, jsonPerson.toModelType().getNotes().size());
     }
@@ -192,17 +194,17 @@ public class JsonAdaptedPersonTest {
         specialNotes.add("Patient needs follow-up @clinic #urgent!");
         specialNotes.add("Medication: 50mg/day (morning & evening)");
         specialNotes.add("Contact: john.doe@email.com or +65-1234-5678");
-        
+
         JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL,
                 VALID_ADDRESS, VALID_TAGS, specialNotes);
-        
+
         Person modelPerson = person.toModelType();
         assertEquals(3, modelPerson.getNotes().size());
-        assertTrue(modelPerson.getNotes().stream().anyMatch(note -> 
+        assertTrue(modelPerson.getNotes().stream().anyMatch(note ->
             note.value.equals("Patient needs follow-up @clinic #urgent!")));
-        assertTrue(modelPerson.getNotes().stream().anyMatch(note -> 
+        assertTrue(modelPerson.getNotes().stream().anyMatch(note ->
             note.value.equals("Medication: 50mg/day (morning & evening)")));
-        assertTrue(modelPerson.getNotes().stream().anyMatch(note -> 
+        assertTrue(modelPerson.getNotes().stream().anyMatch(note ->
             note.value.equals("Contact: john.doe@email.com or +65-1234-5678")));
     }
 
