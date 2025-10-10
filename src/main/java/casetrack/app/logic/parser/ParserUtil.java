@@ -12,6 +12,7 @@ import casetrack.app.logic.parser.exceptions.ParseException;
 import casetrack.app.model.person.Address;
 import casetrack.app.model.person.Email;
 import casetrack.app.model.person.Name;
+import casetrack.app.model.person.Note;
 import casetrack.app.model.person.Phone;
 import casetrack.app.model.tag.Tag;
 
@@ -121,5 +122,20 @@ public class ParserUtil {
             tagSet.add(parseTag(tagName));
         }
         return tagSet;
+    }
+
+    /**
+     * Parses a {@code String note} into a {@code Note}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code note} is invalid.
+     */
+    public static Note parseNote(String note) throws ParseException {
+        requireNonNull(note);
+        String trimmedNote = note.trim();
+        if (!Note.isValidNote(trimmedNote)) {
+            throw new ParseException(Note.MESSAGE_CONSTRAINTS);
+        }
+        return new Note(trimmedNote);
     }
 }
