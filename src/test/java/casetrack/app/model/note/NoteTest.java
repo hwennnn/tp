@@ -124,18 +124,18 @@ public class NoteTest {
     @Test
     public void testNoteFunctionality_fromTestFiles() {
         // Test cases inspired by TestNoteFunctionality.java
-        
+
         // Test basic note creation
         Note note = new Note("This is a test note");
         assertEquals("This is a test note", note.toString());
-        
+
         // Test follow-up note
         Note followUpNote = new Note("Follow-up in 2 weeks");
         assertEquals("Follow-up in 2 weeks", followUpNote.toString());
-        
+
         // Test notes are not equal when content differs
         assertFalse(note.equals(followUpNote));
-        
+
         // Test notes are equal when content is same
         Note duplicateNote = new Note("This is a test note");
         assertTrue(note.equals(duplicateNote));
