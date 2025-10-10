@@ -4,6 +4,7 @@ import static casetrack.app.storage.JsonAdaptedPerson.MISSING_FIELD_MESSAGE_FORM
 import static casetrack.app.testutil.Assert.assertThrows;
 import static casetrack.app.testutil.TypicalPersons.BENSON;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,9 @@ import casetrack.app.commons.exceptions.IllegalValueException;
 import casetrack.app.model.person.Address;
 import casetrack.app.model.person.Email;
 import casetrack.app.model.person.Name;
+import casetrack.app.model.person.Person;
 import casetrack.app.model.person.Phone;
+import casetrack.app.testutil.PersonBuilder;
 
 public class JsonAdaptedPersonTest {
     private static final String INVALID_NAME = "R@chel";
@@ -115,6 +118,92 @@ public class JsonAdaptedPersonTest {
                 new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL,
                         VALID_ADDRESS, invalidTags, VALID_NOTES);
         assertThrows(IllegalValueException.class, person::toModelType);
+    }
+
+    @Test
+    public void toModelType_validNotes_returnsPerson() throws Exception {
+        List<String> validNotes = new ArrayList<>();
+        validNotes.add("Follow-up in 2 weeks");
+        validNotes.add("Patient mentioned financial difficulties");
+        
+        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL,
+                VALID_ADDRESS, VALID_TAGS, validNotes);
+        
+        Person modelPerson = person.toModelType();
+        assertEquals(2, modelPerson.getNotes().size());
+        assertTrue(modelPerson.getNotes().stream().anyMatch(note -> note.value.equals("Follow-up in 2 weeks")));
+        assertTrue(modelPerson.getNotes().stream().anyMatch(note -> note.value.equals("Patient mentioned financial difficulties")));
+    }
+
+    @Test
+    public void toModelType_emptyNotes_returnsPerson() throws Exception {
+        List<String> emptyNotes = new ArrayList<>();
+        
+        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL,
+                VALID_ADDRESS, VALID_TAGS, emptyNotes);
+        
+        Person modelPerson = person.toModelType();
+        assertTrue(modelPerson.getNotes().isEmpty());
+    }
+
+    @Test
+    public void toModelType_nullNotes_returnsPerson() throws Exception {
+        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL,
+                VALID_ADDRESS, VALID_TAGS, null);
+        
+        Person modelPerson = person.toModelType();
+        assertTrue(modelPerson.getNotes().isEmpty());
+    }
+
+    @Test
+    public void toModelType_invalidNotes_skipsInvalidNotes() throws Exception {
+        List<String> notesWithInvalid = new ArrayList<>();
+        notesWithInvalid.add("Valid note");
+        notesWithInvalid.add("   "); // Invalid note (whitespace only)
+        notesWithInvalid.add("Another valid note");
+        notesWithInvalid.add(""); // Invalid note (empty)
+        
+        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL,
+                VALID_ADDRESS, VALID_TAGS, notesWithInvalid);
+        
+        Person modelPerson = person.toModelType();
+        // Should only have the 2 valid notes
+        assertEquals(2, modelPerson.getNotes().size());
+        assertTrue(modelPerson.getNotes().stream().anyMatch(note -> note.value.equals("Valid note")));
+        assertTrue(modelPerson.getNotes().stream().anyMatch(note -> note.value.equals("Another valid note")));
+    }
+
+    @Test
+    public void constructor_personWithNotes_success() throws Exception {
+        // Create a person with notes using PersonBuilder (need to extend it first)
+        Person personWithNotes = new PersonBuilder(BENSON).build();
+        personWithNotes = personWithNotes.addNote(new casetrack.app.model.person.Note("Test note 1"));
+        personWithNotes = personWithNotes.addNote(new casetrack.app.model.person.Note("Test note 2"));
+        
+        JsonAdaptedPerson jsonPerson = new JsonAdaptedPerson(personWithNotes);
+        
+        // Verify notes are properly stored
+        assertEquals(2, jsonPerson.toModelType().getNotes().size());
+    }
+
+    @Test
+    public void toModelType_notesWithSpecialCharacters_success() throws Exception {
+        List<String> specialNotes = new ArrayList<>();
+        specialNotes.add("Patient needs follow-up @clinic #urgent!");
+        specialNotes.add("Medication: 50mg/day (morning & evening)");
+        specialNotes.add("Contact: john.doe@email.com or +65-1234-5678");
+        
+        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL,
+                VALID_ADDRESS, VALID_TAGS, specialNotes);
+        
+        Person modelPerson = person.toModelType();
+        assertEquals(3, modelPerson.getNotes().size());
+        assertTrue(modelPerson.getNotes().stream().anyMatch(note -> 
+            note.value.equals("Patient needs follow-up @clinic #urgent!")));
+        assertTrue(modelPerson.getNotes().stream().anyMatch(note -> 
+            note.value.equals("Medication: 50mg/day (morning & evening)")));
+        assertTrue(modelPerson.getNotes().stream().anyMatch(note -> 
+            note.value.equals("Contact: john.doe@email.com or +65-1234-5678")));
     }
 
 }
