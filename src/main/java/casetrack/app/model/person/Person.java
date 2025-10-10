@@ -2,8 +2,10 @@ package casetrack.app.model.person;
 
 import static casetrack.app.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -24,6 +26,7 @@ public class Person {
     // Data fields
     private final Address address;
     private final Set<Tag> tags = new HashSet<>();
+    private final List<Note> notes = new ArrayList<>();
 
     /**
      * Every field must be present and not null.
@@ -35,6 +38,20 @@ public class Person {
         this.email = email;
         this.address = address;
         this.tags.addAll(tags);
+    }
+
+    /**
+     * Constructor with notes.
+     */
+    public Person(Name name, Phone phone, Email email, Address address,
+            Set<Tag> tags, List<Note> notes) {
+        requireAllNonNull(name, phone, email, address, tags, notes);
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.tags.addAll(tags);
+        this.notes.addAll(notes);
     }
 
     public Name getName() {
@@ -59,6 +76,23 @@ public class Person {
      */
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
+    }
+
+    /**
+     * Returns an immutable note list, which throws {@code UnsupportedOperationException}
+     * if modification is attempted.
+     */
+    public List<Note> getNotes() {
+        return Collections.unmodifiableList(notes);
+    }
+
+    /**
+     * Returns a new Person with the given note added to the notes list.
+     */
+    public Person addNote(Note note) {
+        List<Note> updatedNotes = new ArrayList<>(notes);
+        updatedNotes.add(note);
+        return new Person(name, phone, email, address, new HashSet<>(tags), updatedNotes);
     }
 
     /**
@@ -94,13 +128,14 @@ public class Person {
                 && phone.equals(otherPerson.phone)
                 && email.equals(otherPerson.email)
                 && address.equals(otherPerson.address)
-                && tags.equals(otherPerson.tags);
+                && tags.equals(otherPerson.tags)
+                && notes.equals(otherPerson.notes);
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags);
+        return Objects.hash(name, phone, email, address, tags, notes);
     }
 
     @Override
@@ -111,6 +146,7 @@ public class Person {
                 .add("email", email)
                 .add("address", address)
                 .add("tags", tags)
+                .add("notes", notes)
                 .toString();
     }
 
