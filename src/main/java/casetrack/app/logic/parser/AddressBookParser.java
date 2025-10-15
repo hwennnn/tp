@@ -58,6 +58,12 @@ public class AddressBookParser {
             return new AddCommandParser().parse(arguments);
 
         case EditCommand.COMMAND_WORD:
+            // Allow subcommand style: "edit note ..." routed to EditNoteCommandParser
+            String trimmedArgs = arguments.trim();
+            if (trimmedArgs.startsWith(ParserUtil.NOTE_STRING + " ")) {
+                String remaining = trimmedArgs.substring(ParserUtil.NOTE_STRING.length()).trim();
+                return new EditNoteCommandParser().parse(remaining);
+            }
             return new EditCommandParser().parse(arguments);
 
         case DeletePatientCommand.COMMAND_WORD:

@@ -105,6 +105,15 @@ public class Person {
     }
 
     /**
+     * Returns a new Person with the note at the specified index replaced with the provided note.
+     */
+    public Person editNote(int noteIndex, Note updatedNote) {
+        List<Note> updatedNotes = new ArrayList<>(notes);
+        updatedNotes.set(noteIndex, updatedNote);
+        return new Person(name, phone, email, address, new HashSet<>(tags), updatedNotes);
+    }
+
+    /**
      * Returns true if both persons have the same name.
      * This defines a weaker notion of equality between two persons.
      */
