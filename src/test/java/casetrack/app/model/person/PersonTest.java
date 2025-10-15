@@ -10,10 +10,12 @@ import static casetrack.app.testutil.TypicalPersons.ALICE;
 import static casetrack.app.testutil.TypicalPersons.BOB;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import casetrack.app.model.tag.Tag;
 import casetrack.app.testutil.PersonBuilder;
 
 public class PersonTest {
@@ -21,7 +23,7 @@ public class PersonTest {
     @Test
     public void asObservableList_modifyList_throwsUnsupportedOperationException() {
         Person person = new PersonBuilder().build();
-        assertThrows(UnsupportedOperationException.class, () -> person.getTags().remove(0));
+        assertThrows(UnsupportedOperationException.class, () -> person.getTags().remove(new Tag("dummy")));
     }
 
     @Test
@@ -156,5 +158,29 @@ public class PersonTest {
         assertEquals(2, personRemoved.getNotes().size());
         assertEquals(note1, personRemoved.getNotes().get(0));
         assertEquals(note3, personRemoved.getNotes().get(1));
+    }
+
+    @Test
+    public void equals_differentNotes_returnsFalse() {
+        Note noteA = new Note("Alpha");
+        Note noteB = new Note("Beta");
+
+        Person personWithNoteA = new PersonBuilder(ALICE).withNotes(noteA).build();
+        Person personWithNoteB = new PersonBuilder(ALICE).withNotes(noteB).build();
+
+        // all other fields same, only notes differ -> equals should be false
+        assertFalse(personWithNoteA.equals(personWithNoteB));
+        assertFalse(personWithNoteB.equals(personWithNoteA));
+    }
+
+    @Test
+    public void hashCode_includesNotes() {
+        Note note = new Note("Hash note");
+
+        Person withoutNotes = new PersonBuilder(ALICE).build();
+        Person withNotes = new PersonBuilder(ALICE).withNotes(note).build();
+
+        // hash codes should differ when only notes differ
+        assertNotEquals(withoutNotes.hashCode(), withNotes.hashCode());
     }
 }
