@@ -2,6 +2,7 @@ package casetrack.app.logic.commands;
 
 import static casetrack.app.logic.commands.CommandTestUtil.assertCommandFailure;
 import static casetrack.app.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static casetrack.app.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static casetrack.app.testutil.Assert.assertThrows;
 import static casetrack.app.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static casetrack.app.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
@@ -144,6 +145,20 @@ public class AddNoteCommandTest {
         Note noteToAdd = new Note("Follow-up in 2 weeks");
         NoteCommand noteCommand = new NoteCommand(existingName, nonExistentPhone, noteToAdd);
 
+        assertCommandFailure(noteCommand, model, NoteCommand.MESSAGE_PERSON_NOT_FOUND);
+    }
+
+    @Test
+    public void execute_nameAndPhoneNotInFilteredList_throwsCommandException() {
+        // Take details from the first person, then filter to show only the second person
+        Person target = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Name targetName = target.getName();
+        Phone targetPhone = target.getPhone();
+        Note noteToAdd = new Note("Filter test note");
+
+        showPersonAtIndex(model, INDEX_SECOND_PERSON);
+
+        NoteCommand noteCommand = new NoteCommand(targetName, targetPhone, noteToAdd);
         assertCommandFailure(noteCommand, model, NoteCommand.MESSAGE_PERSON_NOT_FOUND);
     }
 
