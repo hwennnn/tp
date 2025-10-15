@@ -10,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
+
 import org.junit.jupiter.api.Test;
 
 import casetrack.app.commons.core.index.Index;
@@ -115,6 +117,23 @@ public class AddNoteCommandTest {
         NoteCommand noteCommand = new NoteCommand(nonExistentName, nonExistentPhone, noteToAdd);
 
         assertCommandFailure(noteCommand, model, NoteCommand.MESSAGE_PERSON_NOT_FOUND);
+    }
+
+    @Test
+    public void execute_missingPatientReference_throwsCommandException() throws Exception {
+        // Start with a valid name/phone NoteCommand, then remove phone via reflection
+        Person somePerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Name existingName = somePerson.getName();
+        Phone existingPhone = somePerson.getPhone();
+        Note noteToAdd = new Note("Any note");
+        NoteCommand noteCommand = new NoteCommand(existingName, existingPhone, noteToAdd);
+
+        // Simulate parser creating a command without sufficient reference: clear phone
+        Field phoneField = NoteCommand.class.getDeclaredField("phone");
+        phoneField.setAccessible(true);
+        phoneField.set(noteCommand, java.util.Optional.empty());
+
+        assertCommandFailure(noteCommand, model, NoteCommand.MESSAGE_MISSING_PATIENT_REFERENCE);
     }
 
     @Test
