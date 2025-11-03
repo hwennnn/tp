@@ -72,7 +72,8 @@
         "viewing-patient-details": "Viewing patient details",
         "editing-patient-income": "Editing patient income",
         "editing-patient-medical-information": "Editing patient medical information",
-        "saving-data": "Saving data"
+        "saving-data": "Saving data",
+        "appendix-planned-enhancements": "Appendix: Planned Enhancements"
       },
       "headingKeywords": {}
     },
@@ -136,6 +137,7 @@
         "editing-the-data-file": "Editing the data file",
         "data-security-and-privacy": "Data security and privacy",
         "faq": "FAQ",
+        "q-why-is-the-income-field-mandatory-a-the-income-field-supports-future-planned-features-for-financial-aid-assessment-etc": "Q: Why is the income field mandatory?\nA: The income field supports future planned features for financial aid assessment etc.",
         "known-issues": "Known issues",
         "command-summary": "Command summary"
       },
